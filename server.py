@@ -1,0 +1,2 @@
+character = None
+background = None
