@@ -17,7 +17,6 @@ from fireball import Fireball
 from heal import Heal
 from more_hp import MoreHP
 from enhance import Enhance
-from diamond import Diamond
 from medal import Medal
 
 from background import Background
@@ -48,40 +47,38 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             game_framework.push_mode(guide_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_1 and stage < 7:
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_n and stage < 7:
             if Character.stance == 0:
-                Character.voices['SG_Portal'][0].play()
+                Character.voices['SG_Portal_Voice'][0].play()
             elif Character.stance == 1:
-                Character.voices['RF_Portal'][0].play()
+                Character.voices['RF_Portal_Voice'][0].play()
             elif Character.stance == 2:
-                Character.voices['HG_Portal'][0].play()
-            Portal.sound.play()
+                Character.voices['HG_Portal_Voice'][0].play()
+            Character.portal_sound.play()
             stage += 1
             change_stage(stage)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_2 and stage > 1:
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_m and stage > 1:
             if Character.stance == 0:
-                Character.voices['SG_Portal'][0].play()
+                Character.voices['SG_Portal_Voice'][0].play()
             elif Character.stance == 1:
-                Character.voices['RF_Portal'][0].play()
+                Character.voices['RF_Portal_Voice'][0].play()
             elif Character.stance == 2:
-                Character.voices['HG_Portal'][0].play()
-            Portal.sound.play()
+                Character.voices['HG_Portal_Voice'][0].play()
+            Character.portal_sound.play()
             stage -= 1
             change_stage(stage)
         else:
             server.character.handle_event(event)
 
 projectile_group = [
-        'normalsg1', 'normalsg2', 'normalsg3', 'normalrf', 'normalrfsp', 'normalhg', 'reloadrf', 'rcskillrf', 'eskillhg',
-        'rcskillhg', 'qskillsg', 'qskillstunsg', 'qskillrf', 'cskillstunsg', 'cskillsg', 'eskillsg1', 'eskillsg2', 'eskillsg3',
-        'qskillboomhg', 'cskillhg', 'rcskillsg'
-                        ]
+        'normalsg1', 'normalsg2', 'normalsg3', 'normalrf', 'normalrfsp', 'normalhg', 'reloadrf', 'uniquerf', 'uniquehg',
+        'uniquesg', 'skillsg', 'skillstunsg', 'skillrf', 'ultstunsg', 'ultsg', 'skillboomhg', 'ulthg', 'uniquesg'
+        ]
 
 stage_data = {
     1: {
         'ladder_positions': [
-            (range(3, 18), 39),
-            (range(9, 16), 82),
+            (range(3, 13), 39),
             (range(3, 12), 95),
             (range(13, 22), 95),
             (range(8, 17), 106),
@@ -89,67 +86,58 @@ stage_data = {
         ],
 
         'wall_positions': [
-            (range(18, 23), 49),
-            (range(3, 12), 29),
-            (range(9, 27), 83),
-            (range(9, 22), 93),
+            (range(3, 7), 29),
+            (range(11, 23), 43),
         ],
 
         'floor_positions': [
             (2, range(65, 68)),
             (1, range(0, 30)),
             (1, range(35, 44)),
-            (1, range(50, 57)),
+            (1, range(49, 57)),
             (1, range(62, 85)),
-            (1, range(94, 108)),
+            (1, range(89, 90)),
+            (1, range(94, 160)),
             (0, range(0, 30)),
             (0, range(35, 44)),
-            (0, range(50, 57)),
+            (0, range(49, 57)),
             (0, range(62, 85)),
-            (0, range(94, 108)),
+            (0, range(89, 90)),
+            (0, range(94, 160)),
         ],
 
         'ground_positions': [
-            (26, range(105, 108)),
-            (22, range(88, 106)),
-            (21, range(72, 80)),
-            (18, range(38, 41)),
-            (18, range(69, 70)),
+            (23, range(43, 44)),
             (17, range(96, 107)),
-            (16, range(46, 48)),
-            (16, range(82, 83)),
-            (15, range(66, 67)),
-            (14, range(41, 45)),
-            (13, range(13, 21)),
-            (12, range(26, 30)),
-            (12, range(69, 70)),
-            (12, range(76, 79)),
+            (13, range(38, 41)),
             (12, range(95, 106)),
-            (11, range(2, 4)),
-            (9, range(6, 8)),
-            (8, range(82, 84)),
+            (10, range(40, 44)),
+            (8, range(16, 19)),
             (8, range(93, 94)),
-            (7, range(11, 16)),
+            (7, range(28, 30)),
             (7, range(96, 107)),
             (6, range(71, 80)),
-            (5, range(19, 26)),
+            (5, range(8, 15)),
+            (5, range(20, 27)),
             (3, range(65, 68)),
             (2, range(0, 30)),
             (2, range(35, 44)),
-            (2, range(50, 57)),
+            (2, range(49, 57)),
             (2, range(62, 65)),
             (2, range(68, 85)),
-            (2, range(94, 108)),
+            (2, range(89, 90)),
+            (2, range(94, 160)),
         ],
 
         'spore_positions': [
             (7, 3),
+            (10, 6),
             (11, 3),
+            (12, 6),
             (13, 3),
             (17, 3),
             (25, 3),
             (22, 6),
-            (16, 14),
             (74, 7),
             (76, 7),
             (80, 3),
@@ -162,7 +150,9 @@ stage_data = {
 
         'slime_positions': [
             (9, 3),
+            (11, 6),
             (16, 3),
+            (22, 3),
             (39, 3),
             (75, 7),
             (79, 3),
@@ -174,7 +164,8 @@ stage_data = {
         ],
 
         'pig_positions': [
-            (17, 14),
+            (21, 3),
+            (23, 6),
             (40, 3),
             (53, 3),
             (71, 3),
@@ -187,53 +178,55 @@ stage_data = {
         ],
 
         'coconut_positions': [
-        (9, 20, 1),
-        (32, 23, 2),
-        (45, 15, 1),
-        (48, 17, 2),
+        (6, 15, 1),
+        (32, 18, 2),
+        (45, 20, 1),
+        (47, 20, 4),
         (58, 14, 2),
-        (59, 24, 1),
+        (59, 21, 1),
         (60, 14, 4),
-        (66, 24, 3),
-        (69, 24, 2),
-        (80, 24, 5),
+        (66, 21, 3),
+        (69, 21, 2),
+        (80, 21, 5),
         ],
 
         'heal_positions': [
-        (39, 19, 4),
+        (39, 14, 4),
         (76, 22, 4),
         (79, 22, 4),
-        (91, 9, 4),
         ],
     },
 
     2: {
         'floor_positions': [
-            (1, range(0, 36)),
-            (0, range(0, 36)),
+            (1, range(0, 40)),
+            (0, range(0, 40)),
         ],
 
         'ground_positions': [
-            (14, range(32, 36)),
-            (11, range(24, 28)),
-            (8, range(16, 20)),
-            (5, range(8, 12)),
-            (2, range(0, 36)),
+            (14, range(35, 40)),
+            (11, range(27, 32)),
+            (8, range(19, 24)),
+            (5, range(11, 16)),
+            (2, range(0, 40)),
         ],
     },
 
     3: {
         'floor_positions': [
-            (1, range(0, 36)),
-            (0, range(0, 36)),
+            (1, range(0, 40)),
+            (0, range(0, 40)),
         ],
 
         'ground_positions': [
             (10, range(0, 5)),
-            (8, range(12, 24)),
-            (5, range(27, 30)),
-            (5, range(6, 9)),
-            (2, range(0, 36)),
+            (10, range(35, 40)),
+            (8, range(7, 9)),
+            (8, range(14, 26)),
+            (8, range(31, 33)),
+            (5, range(29, 36)),
+            (5, range(4, 11)),
+            (2, range(0, 40)),
         ],
     },
 
@@ -482,11 +475,8 @@ def init(stage):
                 game_world.add_collision_pairs('server.character:ground', None, ground)
 
         # 포탈
-        game_world.add_collision_pairs('server.character:portal', server.character, None)
-
-        portal = Portal(105, 4, 0)
+        portal = Portal(158, 4, 0)
         game_world.add_object(portal, 0)
-        game_world.add_collision_pairs('server.character:portal', None, portal)
 
         # 몹 스포아
         game_world.add_collision_pairs('server.character:spore', server.character, None)
@@ -554,13 +544,6 @@ def init(stage):
         game_world.add_object(enhance, 2)
         game_world.add_collision_pairs('server.character:enhance', None, enhance)
 
-        # 다이아 몬드 아이템
-        game_world.add_collision_pairs('server.character:diamond', server.character, None)
-
-        diamond = Diamond(100, 3)
-        game_world.add_object(diamond, 2)
-        game_world.add_collision_pairs('server.character:diamond', None, diamond)
-
     elif stage == 2:
         stage_info = stage_data[stage]
 
@@ -596,11 +579,8 @@ def init(stage):
                 game_world.add_collision_pairs('server.character:ground', None, ground)
 
         # 포탈
-        game_world.add_collision_pairs('server.character:portal', server.character, None)
-
-        portal = Portal(34, 16, 0)
+        portal = Portal(37, 16, 0)
         game_world.add_object(portal, 0)
-        game_world.add_collision_pairs('server.character:portal', None, portal)
 
     elif stage == 3:
         stage_info = stage_data[stage]
@@ -637,11 +617,8 @@ def init(stage):
                 game_world.add_collision_pairs('server.character:ground', None, ground)
 
         # 포탈
-        game_world.add_collision_pairs('server.character:portal', server.character, None)
-
-        portal = Portal(34, 4, 1)
+        portal = Portal(38, 4, 1)
         game_world.add_object(portal, 0)
-        game_world.add_collision_pairs('server.character:portal', None, portal)
 
         # 보스 골렘
         game_world.add_collision_pairs('server.character:stonegolem', server.character, None)
@@ -650,7 +627,7 @@ def init(stage):
         game_world.add_collision_pairs('server.character:enhance', server.character, None)
         game_world.add_collision_pairs('server.character:medal', server.character, None)
 
-        stonegolem = Stonegolem(18, 6)
+        stonegolem = Stonegolem(18, 5)
         game_world.add_object(stonegolem, 0)
         game_world.add_collision_pairs('server.character:stonegolem', None, stonegolem)
         for projectile in projectile_group:
@@ -663,13 +640,6 @@ def init(stage):
         game_world.add_objects(heals, 2)
         for heal in heals:
             game_world.add_collision_pairs('server.character:heal', None, heal)
-
-        # 최대 체력 증가 아이템
-        game_world.add_collision_pairs('server.character:morehp', server.character, None)
-
-        morehp = MoreHP(21, 9)
-        game_world.add_object(morehp, 2)
-        game_world.add_collision_pairs('server.character:morehp', None, morehp)
 
     elif stage == 4:
         stage_info = stage_data[stage]
@@ -801,13 +771,6 @@ def init(stage):
         enhance = Enhance(68, 7)
         game_world.add_object(enhance, 2)
         game_world.add_collision_pairs('server.character:enhance', None, enhance)
-
-        # 다이아 몬드 아이템
-        game_world.add_collision_pairs('server.character:diamond', server.character, None)
-
-        diamond = Diamond(101, 3)
-        game_world.add_object(diamond, 2)
-        game_world.add_collision_pairs('server.character:diamond', None, diamond)
 
     elif stage == 5:
         stage_info = stage_data[stage]
@@ -978,13 +941,6 @@ def init(stage):
         enhance = Enhance(54, 3)
         game_world.add_object(enhance, 2)
         game_world.add_collision_pairs('server.character:enhance', None, enhance)
-
-        # 다이아 몬드 아이템
-        game_world.add_collision_pairs('server.character:diamond', server.character, None)
-
-        diamond = Diamond(27, 3)
-        game_world.add_object(diamond, 2)
-        game_world.add_collision_pairs('server.character:diamond', None, diamond)
 
     elif stage == 7:
         stage_info = stage_data[stage]

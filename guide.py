@@ -31,4 +31,3 @@ class Guide:
 
         if guide_mode.cn == 0:
             self.font.draw(70.0, 725.0, f'HP : {Character.hp}', (255, 0, 0))
-            self.font.draw(480.0, 725.0, f'Score : {Character.score}', (0, 0, 0))

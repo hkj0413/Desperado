@@ -25,7 +25,7 @@ class NormalRF:
             self.timer = 0
             self.temp += 1
             self.x += 20 * self.face
-            if self.temp == 24 or self.count >= 4:
+            if self.temp == 32 or self.count >= 4:
                 game_world.remove_object(self)
 
     def draw(self):

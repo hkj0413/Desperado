@@ -10,7 +10,7 @@ class StonegolemSkill:
 
     def __init__(self):
         self.x = server.character.x
-        self.y = 760
+        self.y = 860
         self.sx = 0
         self.timer = 0
         self.temp = 0

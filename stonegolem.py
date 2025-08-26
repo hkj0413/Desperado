@@ -34,9 +34,9 @@ class Stonegolem:
                     Stonegolem.images[name] = [load_image("./Boss/Stonegolem/" + name + " (%d)" % i + ".png") for i in range(1, 7 + 1)]
 
     def __init__(self, i=0.0, j=0):
-        self.x = i * 30.0 + 15.0 + 210.0
-        self.y = j * 30.0 + 15.0
-        self.base_x = i * 30.0 + 15.0
+        self.x = i * 40.0 + 20.0 + 280.0
+        self.y = j * 40.0 + 20.0
+        self.base_x = i * 40.0 + 20.0
         self.sx = 0
         self.face_dir = -1
         self.state = 0
@@ -63,7 +63,7 @@ class Stonegolem:
 
     def update(self):
         self.sx = self.x - server.background.window_left
-        self.x = clamp(self.base_x - 420.0, self.x, self.base_x + 420.0)
+        self.x = clamp(self.base_x - 680.0, self.x, self.base_x + 680.0)
 
         self.timer += game_framework.frame_time
 
@@ -179,14 +179,14 @@ class Stonegolem:
                 self.font.draw(self.x - 30, self.y + 150, f'HP : {self.hp}', (255, 0, 0))
             if self.state == 2 or self.state == 3:
                 if self.face_dir == 1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx - 15, self.y + 25, 387, 267)
+                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx - 15, self.y + 30, 387, 267)
                 elif self.face_dir == -1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx + 15, self.y + 25, 387, 267)
+                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx + 15, self.y + 30, 387, 267)
             else:
                 if self.face_dir == 1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx - 60, self.y + 25, 387, 267)
+                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx - 60, self.y + 30, 387, 267)
                 elif self.face_dir == -1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx + 60, self.y + 25, 387, 267)
+                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx + 60, self.y + 30, 387, 267)
                 if character.God:
                     draw_rectangle(*self.get_rect())
                     draw_rectangle(*self.get_attack())

@@ -26,15 +26,15 @@ class NormalSG3:
 
     def get_bb(self):
         if self.face == 1:
-            return self.x + 121.0 + 17.0, self.y - 49.0, self.x + 180.0 + 17.0, self.y + 19.0
+            return self.x + 161.0 + 17.0, self.y - 49.0, self.x + 240.0 + 17.0, self.y + 19.0
         elif self.face == -1:
-            return self.x - 180.0 - 17.0, self.y - 49.0, self.x - 121.0 - 17.0, self.y + 19.0
+            return self.x - 240.0 - 17.0, self.y - 49.0, self.x - 161.0 - 17.0, self.y + 19.0
 
     def get_rect(self):
         if self.face == 1:
-            return self.sx + 121.0 + 17.0, self.y - 49.0, self.sx + 180 + 17.0, self.y + 19.0
+            return self.sx + 161.0 + 17.0, self.y - 49.0, self.sx + 240 + 17.0, self.y + 19.0
         elif self.face == -1:
-            return self.sx - 180.0 - 17.0, self.y - 49.0, self.sx - 121.0 - 17.0, self.y + 19.0
+            return self.sx - 240.0 - 17.0, self.y - 49.0, self.sx - 161.0 - 17.0, self.y + 19.0
 
     def handle_collision(self, group, other):
         mob_group = [

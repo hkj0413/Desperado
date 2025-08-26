@@ -26,9 +26,9 @@ class Spore:
                     Spore.images[name] = [load_image("./Mob/Spore/" + name + " (%d)" % i + ".png") for i in range(1, 4 + 1)]
 
     def __init__(self, i=0.0, j=0):
-        self.x = i * 30.0 + 15.0
-        self.y = j * 30.0 + 15.0
-        self.base_x = i * 30.0 + 15.0
+        self.x = i * 40.0 + 20.0
+        self.y = j * 40.0 + 20.0
+        self.base_x = i * 40.0 + 20.0
         self.sx = 0
         self.face_dir = random.randint(0, 1) * 2 - 1  # -1 or 1
         self.state = random.randint(0, 1)
@@ -55,7 +55,7 @@ class Spore:
 
         self.timer += game_framework.frame_time
 
-        if self.timer >= 1:
+        if self.timer >= 0.25:
             self.timer = 0
             self.temp += 1
             self.delay = False
@@ -108,20 +108,20 @@ class Spore:
             self.frame = (self.frame + 2.0 * 1.5 * game_framework.frame_time) % 2
 
     def draw(self):
-        if -15 <= self.sx <= 1080 + 15:
+        if -15 <= self.sx <= 1620 + 15:
             if not self.state == 5:
                 if self.face_dir == 1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx, self.y, 50, 50)
+                    self.images[self.name][int(self.frame)].composite_draw(0, 'h', self.sx, self.y - 2, 50, 50)
                 elif self.face_dir == -1:
-                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx, self.y, 50, 50)
+                    self.images[self.name][int(self.frame)].composite_draw(0, '', self.sx, self.y - 2, 50, 50)
                 if character.God:
                     draw_rectangle(*self.get_rect())
 
     def get_bb(self):
-        return self.x - 15.0, self.y - 15.0, self.x + 15.0, self.y + 15.0
+        return self.x - 15.0, self.y - 17.0, self.x + 15.0, self.y + 13.0
 
     def get_rect(self):
-        return self.sx - 15.0, self.y - 15.0, self.sx + 15.0, self.y + 15.0
+        return self.sx - 15.0, self.y - 17.0, self.sx + 15.0, self.y + 13.0
 
     def handle_collision(self, group, other):
         if group == 'server.character:spore' and (self.state == 0 or self.state == 1):
@@ -143,7 +143,6 @@ class Spore:
             if self.hp <= 0:
                 self.state = 4
                 self.frame = 0
-                character.Character.score += 1
                 self.stun = 0
             else:
                 self.state = 2
@@ -167,7 +166,7 @@ class Spore:
             self.face_dir *= -1
 
     def check_zero_logic(self):
-        if self.temp == 4 or random.randint(1, 5) == 1:
+        if self.temp == 4 or random.randint(1, 20) == 1:
             self.state = 1
             self.temp = 0
 
@@ -177,7 +176,7 @@ class Spore:
         return BehaviorTree.SUCCESS
 
     def check_one_logic(self):
-        if random.randint(1, 5) == 1:
+        if random.randint(1, 20) == 1:
             self.state = 0
             self.temp = 0
 
@@ -209,7 +208,7 @@ class Spore:
         return BehaviorTree.SUCCESS
 
     def check_five_logic(self):
-        if self.temp == 5:
+        if self.temp == 20:
             self.state = 6
             self.temp = 0
             self.hp = 2

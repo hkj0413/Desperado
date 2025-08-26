@@ -8,8 +8,8 @@ class Heal:
     Getitem_sound = None
 
     def __init__(self, i=0.0, j=0.0, k=0):
-        self.x = i * 30.0 + 15.0
-        self.y = j * 30.0 + 15.0
+        self.x = i * 40.0 + 20.0
+        self.y = j * 40.0 + 20.0
         self.sx = 0
         self.state = 0
         self.delay = 0
@@ -23,12 +23,12 @@ class Heal:
     def update(self):
         self.sx = self.x - server.background.window_left
         if self.state == 1:
-            if get_time() - self.delay > 30:
+            if get_time() - self.delay > 60:
                 self.state = 0
 
     def draw(self):
         if self.state == 0:
-            if -30 <= self.sx <= 1080 + 30:
+            if -30 <= self.sx <= 1620 + 30:
                 self.image.draw(self.sx, self.y + 15, 75, 75)
                 if character.God:
                     draw_rectangle(*self.get_rect())

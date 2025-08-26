@@ -9,8 +9,8 @@ class Enhance:
     Getitem_sound = None
 
     def __init__(self, i=0.0, j=0.0):
-        self.x = i * 30.0 + 15.0
-        self.y = j * 30.0 + 15.0
+        self.x = i * 40.0 + 20.0
+        self.y = j * 40.0 + 20.0
         self.sx = 0
         if Enhance.image == None:
             Enhance.image = load_image("./Item/" + 'Enhance' + ".png")
@@ -22,7 +22,7 @@ class Enhance:
         self.sx = self.x - server.background.window_left
 
     def draw(self):
-        if -30 <= self.sx <= 1080 + 30:
+        if -30 <= self.sx <= 1620 + 30:
             self.image.draw(self.sx, self.y + 15, 50, 50)
             if character.God:
                 draw_rectangle(*self.get_rect())

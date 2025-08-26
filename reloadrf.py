@@ -36,12 +36,12 @@ class ReloadRF:
         if self.timer >= 0.01:
             self.timer = 0
             self.temp += 1
-            self.x += 12 * self.face
-            if self.temp == 20:
+            self.x += 20 * self.face
+            if self.temp == 16:
                 game_world.remove_object(self)
 
     def draw(self):
-        if self.temp < 20:
+        if self.temp < 24:
             if self.face == 1:
                 self.image.composite_draw(0, 'h', self.sx + 80, self.y - 10, 33, 52)
             elif self.face == -1:

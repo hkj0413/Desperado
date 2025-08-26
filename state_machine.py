@@ -36,19 +36,13 @@ def change_stance_x(e):
 def jump(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
-def dash(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LSHIFT
-
 def reload(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_r
 
-def q_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_q
+def skill(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LSHIFT
 
-def e_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_e
-
-def c_down(e):
+def ultimate(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_c
 
 def idle(e):
@@ -66,17 +60,11 @@ def take_hit(e):
 def die(e):
     return e[0] == 'DIE'
 
-def use_dash(e):
-    return e[0] == 'USE_DASH'
+def sg_skill(e):
+    return e[0] == 'SG_SKILL'
 
-def sg_q(e):
-    return e[0] == 'SG_Q'
-
-def sg_e(e):
-    return e[0] == 'SG_E'
-
-def sg_c(e):
-    return e[0] == 'SG_C'
+def sg_ult(e):
+    return e[0] == 'SG_ULT'
 
 def rf_reload(e):
     return e[0] == 'RF_RELOAD'
@@ -87,20 +75,23 @@ def rf_reload_s(e):
 def rf_rc(e):
     return e[0] == 'RF_RC'
 
-def rf_q(e):
-    return e[0] == 'RF_Q'
+def rf_skill(e):
+    return e[0] == 'RF_SKILL'
 
-def rf_e(e):
-    return e[0] == 'RF_E'
+def rf_ult(e):
+    return e[0] == 'RF_ULT'
 
-def rf_c(e):
-    return e[0] == 'RF_C'
+def hg_reload(e):
+    return e[0] == 'HG_RELOAD'
 
-def hg_e(e):
-    return e[0] == 'HG_E'
+def hg_reload_end(e):
+    return e[0] == 'HG_RELOAD_END'
 
-def hg_c(e):
-    return e[0] == 'HG_C'
+def hg_skill(e):
+    return e[0] == 'HG_SKILL'
+
+def hg_ult(e):
+    return e[0] == 'HG_ULT'
 
 def time_out(e):
     return e[0] == 'TIME_OUT'
@@ -134,6 +125,9 @@ def temp_down(e):
 
 def temp_medal(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_l
+
+def temp_die(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_b
 
 class StateMachine:
     def __init__(self, o):
