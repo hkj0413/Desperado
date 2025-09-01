@@ -10,11 +10,12 @@ class UniqueRFEffect:
     Unique_RF_shot_sound = None
     Unique_RF_last_sound = None
 
-    def __init__(self):
-        self.x = character.mouse_x
-        self.y = 900 - character.mouse_y
+    def __init__(self, d):
+        self.x = server.character.target_down_x
+        self.y = server.character.target_down_y
         self.sx = 0
         self.frame = 0
+        self.face = d
         if UniqueRFEffect.image == None:
             UniqueRFEffect.image = [load_image("./Effect/RF/" + 'Unique_RF' + " (%d)" % i + ".png") for i in range(1, 8 + 1)]
         if UniqueRFEffect.Unique_RF_shot_sound == None:

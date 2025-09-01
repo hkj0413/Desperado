@@ -6,12 +6,13 @@ import game_world
 from pico2d import draw_rectangle
 
 class UniqueRF:
-    def __init__(self):
-        self.x = character.mouse_x
-        self.y = 900 - character.mouse_y
+    def __init__(self, d):
+        self.x = server.character.target_down_x
+        self.y = server.character.target_down_y
         self.sx = 0
         self.damage = server.character.damage_RF * 2
         self.frame = 0
+        self.face = d
 
     def update(self):
         self.sx = self.x - server.background.window_left
@@ -36,10 +37,6 @@ class UniqueRF:
             return self.sx - 45.0, self.y - 45.0, self.sx + 45.0, self.y + 45.0
 
     def handle_collision(self, group, other):
-        mob_group = [
-            'spore', 'slime', 'pig', 'stonegolem', 'skelldog', 'coldeye', 'wildboar', 'stonestatue',
-            'bulldog', 'imp', 'fireboar', 'firemixgolem'
-        ]
-        for mob in mob_group:
-            if group == f'uniquerf:{mob}':
+        if group == 'uniquerf:monster':
+            if hasattr(other, 'take_damage'):
                 other.take_damage(self.damage)

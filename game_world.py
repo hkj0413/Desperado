@@ -1,6 +1,9 @@
 import character
 import game_framework
 
+EPS_X = 2.0
+EPS_Y = 2.0
+
 world = [[] for _ in range(5)]
 collision_pairs = {}
 
@@ -66,50 +69,66 @@ def collide(a, b):
 
     return True
 
+def x_overlap(al, ar, bl, br):
+    return (al < br - EPS_X) and (ar > bl + EPS_X)
+
 def collide_fall(a, b):
     al, ab, ar, at = a.get_bb()
     bl, bb, br, bt = b.get_bb()
 
-    if al < br and ab < bt and ar > bl and ab + character.fall_velocity * character.RUN_SPEED_PPS * game_framework.frame_time > bt:
-        return True
-    return False
+    dy = character.fall_velocity * character.RUN_SPEED_PPS * game_framework.frame_time
+    if dy <= 0:
+        return False
+
+    return x_overlap(al, ar, bl, br) and (ab - EPS_Y <= bt <= ab + dy + EPS_Y)
 
 def collide_jump(a, b):
     al, ab, ar, at = a.get_bb()
     bl, bb, br, bt = b.get_bb()
 
-    if al < br and at > bb and ar > bl and at - character.jump_velocity * character.RUN_SPEED_PPS * game_framework.frame_time < bb:
-        return True
-    return False
+    dy = -character.jump_velocity * character.RUN_SPEED_PPS * game_framework.frame_time
+    if dy >= 0:
+        return False
+
+    return x_overlap(al, ar, bl, br) and (at + dy - EPS_Y <= bb <= at + EPS_Y)
 
 def collide_ad(a, b, objects):
     al, ab, ar, at = a.get_bb()
     bl, bb, br, bt = b.get_bb()
 
+    step = a.speed * character.RUN_SPEED_PPS * game_framework.frame_time
+
     if a.face_dir == 1:
-        if al - a.speed * 4 > br > al - a.speed * 5 and ab - 1 == bt:
-            if any(o.x - 15 <= al <= o.x + 15 and ab - 1 == o.y + 15 for o in objects if o != b):
+        if (al > br) and ((al - br) <= (step + EPS_X)) and (abs((ab - 1) - bt) <= EPS_Y):
+            if any((o.x - 15 <= al <= o.x + 15) and (abs((ab - 1) - (o.y + 15)) <= EPS_Y) for o in objects if o != b):
                 return False
             return True
 
     elif a.face_dir == -1:
-        if ar + a.speed * 4 < bl < ar + a.speed * 5 and ab - 1 == bt:
-            if any(o.x - 15 <= ar <= o.x + 15 and ab - 1 == o.y + 15 for o in objects if o != b):
+        if (ar < bl) and ((bl - ar) <= (step + EPS_X)) and (abs((ab - 1) - bt) <= EPS_Y):
+            if any((o.x - 15 <= ar <= o.x + 15) and (abs((ab - 1) - (o.y + 15)) <= EPS_Y) for o in objects if o != b):
                 return False
             return True
+
     return False
 
 def collide_ladder(a, b):
     al, ab, ar, at = a.get_bb()
     bl, bb, br, bt = b.get_bb()
 
+    step = a.speed * character.RUN_SPEED_PPS * game_framework.frame_time
+
+    if not (ab < bt and at > bb):
+        return False
+
     if a.face_dir == 1:
-        if al > br > al - a.speed * character.RUN_SPEED_PPS * game_framework.frame_time and ab < bt and at > bb:
+        if (al > br) and ((al - br) <= (step + EPS_X)):
             return True
 
     elif a.face_dir == -1:
-        if ar < bl < ar + a.speed * character.RUN_SPEED_PPS * game_framework.frame_time and ab < bt and at > bb:
+        if (ar < bl) and ((bl - ar) <= (step + EPS_X)):
             return True
+
     return False
 
 def handle_collisions():
@@ -117,9 +136,9 @@ def handle_collisions():
 
     for group, pairs in collision_pairs_copy:
         for a in pairs[0]:
-            if character.screen_left - 15 <= a.x <= character.screen_right + 15:
+            if character.screen_left - 20 <= a.x <= character.screen_right + 20:
                 for b in pairs[1]:
-                    if character.screen_left - 15 <= b.x <= character.screen_right + 15:
+                    if character.screen_left - 20 <= b.x <= character.screen_right + 20:
                         if group == 'server.character:ground':
                             if collide_fall(a, b) and character.Fall:
                                 a.handle_collision_fall(group, b)

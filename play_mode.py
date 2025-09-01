@@ -20,6 +20,7 @@ from enhance import Enhance
 from medal import Medal
 
 from background import Background
+from mob import create_monster
 from spore import Spore
 from slime import Slime
 from pig import Pig
@@ -129,52 +130,32 @@ stage_data = {
             (2, range(94, 160)),
         ],
 
-        'spore_positions': [
-            (7, 3),
-            (10, 6),
-            (11, 3),
-            (12, 6),
-            (13, 3),
-            (17, 3),
-            (25, 3),
-            (22, 6),
-            (74, 7),
-            (76, 7),
-            (80, 3),
-            (99, 8),
-            (100, 8),
-            (101, 8),
-            (102, 8),
-            (103, 8),
-        ],
-
-        'slime_positions': [
-            (9, 3),
-            (11, 6),
-            (16, 3),
-            (22, 3),
-            (39, 3),
-            (75, 7),
-            (79, 3),
-            (98, 13),
-            (99, 13),
-            (100,13),
-            (101, 13),
-            (102, 13),
-        ],
-
-        'pig_positions': [
-            (21, 3),
-            (23, 6),
-            (40, 3),
-            (53, 3),
-            (71, 3),
-            (73, 3),
-            (99, 18),
-            (100, 18),
-            (101, 18),
-            (102, 18),
-            (103, 18),
+        'monsters': [
+            {
+                "type": "Spore",
+                "positions": [
+                    (7, 3), (10, 6), (11, 3), (12, 6), (13, 3),
+                    (17, 3), (25, 3), (22, 6), (74, 7), (76, 7),
+                    (80, 3), (99, 8), (100, 8), (101, 8),
+                    (102, 8), (103, 8),
+                ]
+            },
+            {
+                "type": "Slime",
+                "positions": [
+                    (9, 3), (11, 6), (16, 3), (22, 3), (39, 3),
+                    (75, 7), (79, 3), (98, 13), (99, 13),
+                    (100, 13), (101, 13), (102, 13),
+                ]
+            },
+            {
+                "type": "Pig",
+                "positions": [
+                    (21, 3), (23, 6), (40, 3), (53, 3),
+                    (71, 3), (73, 3), (99, 18), (100, 18),
+                    (101, 18), (102, 18), (103, 18),
+                ]
+            },
         ],
 
         'coconut_positions': [
@@ -478,38 +459,23 @@ def init(stage):
         portal = Portal(158, 4, 0)
         game_world.add_object(portal, 0)
 
-        # 몹 스포아
-        game_world.add_collision_pairs('server.character:spore', server.character, None)
+        game_world.add_collision_pairs('server.character:monster', server.character, None)
 
-        for i, j in stage_info['spore_positions']:
-            spores = [Spore(i, j)]
-            game_world.add_objects(spores, 2)
-            for spore in spores:
-                game_world.add_collision_pairs('server.character:spore', None, spore)
-                for projectile in projectile_group:
-                    game_world.add_collision_pairs(f'{projectile}:spore', None, spore)
+        # 2) 생성
+        monsters = []
+        for pack in stage_info['monsters']:
+            t = pack['type']
+            for (i, j) in pack['positions']:
+                monsters.append(create_monster(t, i, j))
 
-        # 몹 슬라임
-        game_world.add_collision_pairs('server.character:slime', server.character, None)
+        # 3) 월드에 추가
+        game_world.add_objects(monsters, 2)  # 기존 레이어 유지
 
-        for i, j in stage_info['slime_positions']:
-            slimes = [Slime(i, j)]
-            game_world.add_objects(slimes, 2)
-            for slime in slimes:
-                game_world.add_collision_pairs('server.character:slime', None, slime)
-                for projectile in projectile_group:
-                    game_world.add_collision_pairs(f'{projectile}:slime', None, slime)
-
-        # 몹 돼지
-        game_world.add_collision_pairs('server.character:pig', server.character, None)
-
-        for i, j in stage_info['pig_positions']:
-            pigs = [Pig(i, j)]
-            game_world.add_objects(pigs, 2)
-            for pig in pigs:
-                game_world.add_collision_pairs('server.character:pig', None, pig)
-                for projectile in projectile_group:
-                    game_world.add_collision_pairs(f'{projectile}:pig', None, pig)
+        # 4) 충돌 페어 연결 (공통 ':monster' 로 통일)
+        for m in monsters:
+            game_world.add_collision_pairs('server.character:monster', None, m)
+            for projectile in projectile_group:
+                game_world.add_collision_pairs(f'{projectile}:monster', None, m)
 
         # 낙하 장애물 코코넛 k = 박자
         game_world.add_collision_pairs('server.character:coconut', server.character, None)
@@ -984,8 +950,25 @@ def init(stage):
         game_world.add_collision_pairs('server.character:portal', None, portal)
 
 def finish():
-    game_world.clear()
-    pass
+    import gc
+    try:
+        game_world.clear()
+    except Exception:
+        pass
+
+    try:
+        server.character = None
+        server.background = None
+    except Exception:
+        pass
+
+    gc.collect()
+
+    try:
+        from mob import release_assets as release_monsters_assets
+        release_monsters_assets()
+    except Exception:
+        pass
 
 def update():
     game_world.update()

@@ -107,7 +107,7 @@ class UI:
                 for i in range(Character.target_down_bullet):
                     self.bullet_image[7].draw(bx - i * 39 , by - 40, 33, 30)
                 if not character.Attack:
-                    self.bullet_image[7].draw(character.mouse_x, 900 - character.mouse_y,
+                    self.bullet_image[7].draw(Character.target_down_sx, Character.target_down_y,
                                               120 - Character.target_down_size, 120 - Character.target_down_size)
         elif Character.stance == 2:
             if Character.dexterous_shot_cooldown == 0:
