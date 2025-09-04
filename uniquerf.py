@@ -6,13 +6,12 @@ import game_world
 from pico2d import draw_rectangle
 
 class UniqueRF:
-    def __init__(self, d):
+    def __init__(self):
         self.x = server.character.target_down_x
         self.y = server.character.target_down_y
         self.sx = 0
         self.damage = server.character.damage_RF * 2
         self.frame = 0
-        self.face = d
 
     def update(self):
         self.sx = self.x - server.background.window_left

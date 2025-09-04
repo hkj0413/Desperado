@@ -20,9 +20,7 @@ from skillsg_stun import SkillstunSG
 from ultsg_effect import ULTSGEffect
 
 from rf_effect import RFEffect
-from normalrf_effect import NormalRFEffect
 from normalrf import NormalRF
-from normalrf_superior_effect import NormalRFSPEffect
 from normalrfsp import NormalRFSP
 from reloadrf import ReloadRF
 from uniquerf import UniqueRF
@@ -34,9 +32,6 @@ from ultrf_effect import ULTRFEffect
 
 from hg_effect import HGEffect
 from normalhg import NormalHG
-from normalhg_effect import NormalHGEffect
-from rcskillhg import RcskillHG
-from rcskillhg_effect import RcskillHGEffect
 from ulthg_effect import ULTHGEffect
 from ulthg import ULTHG
 
@@ -2533,16 +2528,10 @@ class Character:
                             Character.bullet_RF -= 1
 
                             if Character.bullet_RF > 0:
-                                normalrfeffect = NormalRFEffect(self.face_dir)
-                                game_world.add_object(normalrfeffect, 3)
-
                                 normalrf = NormalRF(self.face_dir)
                                 game_world.add_object(normalrf, 3)
                                 game_world.add_collision_pairs(f'normalrf:monster', normalrf, None)
                             else:
-                                normalrfspeffect = NormalRFSPEffect(self.face_dir)
-                                game_world.add_object(normalrfspeffect, 3)
-
                                 normalrfsp = NormalRFSP(self.face_dir)
                                 game_world.add_object(normalrfsp, 3)
                                 game_world.add_collision_pairs(f'normalrfsp:monster', normalrfsp, None)
@@ -2561,10 +2550,10 @@ class Character:
                             self.frame = 0
                             Character.target_down_bullet -= 1
 
-                            uniquerfeffect = UniqueRFEffect(self.face_dir)
+                            uniquerfeffect = UniqueRFEffect()
                             game_world.add_object(uniquerfeffect, 3)
 
-                            uniquerf = UniqueRF(self.face_dir)
+                            uniquerf = UniqueRF()
                             game_world.add_object(uniquerf, 3)
                             game_world.add_collision_pairs(f'uniquerf:monster', uniquerf, None)
 
@@ -2576,9 +2565,6 @@ class Character:
                         if self.attack_time == 0:
                             self.attack_time = get_time()
                             self.frame = 0
-
-                            normalrfspeffect = NormalRFSPEffect(self.face_dir)
-                            game_world.add_object(normalrfspeffect, 3)
 
                             normalrfsp = NormalRFSP(self.face_dir)
                             game_world.add_object(normalrfsp, 3)
@@ -2622,9 +2608,6 @@ class Character:
                                 self.frame = 0
                                 Character.bullet_HG -= 2
 
-                                normalhgeffect = NormalHGEffect(self.face_dir)
-                                game_world.add_object(normalhgeffect, 3)
-
                                 normalhg = NormalHG(self.face_dir)
                                 game_world.add_object(normalhg, 3)
                                 game_world.add_collision_pairs(f'normalhg:monster', normalhg, None)
@@ -2645,9 +2628,6 @@ class Character:
                                 self.attack_time = get_time()
                                 self.frame = 0
                                 Character.bullet_HG -= 1
-
-                                normalhgeffect = NormalHGEffect(self.face_dir)
-                                game_world.add_object(normalhgeffect, 3)
 
                                 normalhg = NormalHG(self.face_dir)
                                 game_world.add_object(normalhg, 3)
@@ -2680,8 +2660,6 @@ class Character:
                     Attack = False
             elif Character.stance == 2:
                 if (0.3 > get_time() - self.double_time > 0.25) and self.doubleattack == 1:
-                    normalhgeffect = NormalHGEffect(self.face_dir)
-                    game_world.add_object(normalhgeffect, 3)
 
                     normalhg = NormalHG(self.face_dir)
                     game_world.add_object(normalhg, 3)

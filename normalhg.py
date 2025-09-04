@@ -44,7 +44,7 @@ class NormalHG:
     def draw(self):
         if character.God:
             draw_rectangle(*self.get_rect())
-        if self.temp < 36 or self.count >= 1:
+        if self.temp < 36 or self.count < 1:
             if self.face == 1:
                 self.image.composite_draw(0, '', self.sx + 15, self.y - 10, 30, 27)
             elif self.face == -1:

@@ -1,5 +1,3 @@
-# monsters.py (완성본: on_hit 버그 픽스 + toughness + 리스폰 로직 포함)
-
 import copy
 import random
 
@@ -44,6 +42,9 @@ MONSTER_DEFAULTS = {
 
     # 어그로: 피격 시에만 플레이어 방향을 보고 Walk로 전환
     "aggro": {"on_hit": False},
+
+    # ★ 접촉 데미지(기본 1). 템플릿에서 타입별로 오버라이드 가능
+    "damage": 1,
 }
 
 MONSTER_TEMPLATES = {
@@ -61,6 +62,7 @@ MONSTER_TEMPLATES = {
         "draw": {"w": 50, "h": 50, "offset_x": 0.0, "offset_y": -2.0, "offset_face": 0.0},
         "toughness": 0.0,
         "aggro": {"on_hit": False},
+        "damage": 1,
     },
 
     "Slime": {
@@ -77,6 +79,7 @@ MONSTER_TEMPLATES = {
         "draw": {"w": 70, "h": 85, "offset_x": 0.0, "offset_y": 22.0, "offset_face": 10.0},
         "toughness": 0.0,
         "aggro": {"on_hit": False},
+        "damage": 1,
     },
 
     "Pig": {
@@ -93,6 +96,7 @@ MONSTER_TEMPLATES = {
         "draw": {"w": 70, "h": 60, "offset_x": 0.0, "offset_y": 8.0, "offset_face": 3.0},
         "toughness": 0.0,
         "aggro": {"on_hit": False},
+        "damage": 2,
     },
 }
 
@@ -174,6 +178,7 @@ class Monster:
         self.range = tpl["patrol"]["range"]
         self.toughness = float(tpl.get("toughness", 0.0))  # 스턴 저항(0~1)
         self.aggro_on_hit = bool(tpl.get("aggro", {}).get("on_hit", False))
+        self.contact_damage = int(tpl.get("damage", 1))     # ★ 접촉 데미지
 
         # bbox/draw
         bb = tpl["bbox"]
@@ -220,7 +225,7 @@ class Monster:
         return not self.is_invulnerable()
 
     def can_attack_player(self):
-        # 무적 or 비공격 상태면 접촉공격 불가 (요구사항 충족)
+        # 무적 or 비공격 상태면 접촉공격 불가
         return (self.invuln <= 0.0) and (self.state not in NON_ATTACK_STATES)
 
     # --- 엔진 훅 ---
@@ -344,7 +349,8 @@ class Monster:
         # 캐릭터 접촉 데미지: 무적/비공격 상태면 미적용
         if group == 'server.character:monster' and self.can_attack_player():
             if hasattr(other, 'take_damage'):
-                other.take_damage(1)
+                # ★ 몬스터별 접촉 데미지 사용
+                other.take_damage(self.contact_damage)
             return
 
         # 투사체 ↔ 몬스터
